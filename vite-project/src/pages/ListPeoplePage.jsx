@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPeople } from "../redux/peopleSlice";
-import { Grid, Typography, Skeleton, Stack } from "@mui/material";
+import { setPeople, removePerson } from "../redux/peopleSlice";
+import {
+  Grid,
+  Typography,
+  Skeleton,
+  Stack,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import AppCard from "../components/AppCard";
-import { fetchPeople } from "../api-requests";
+import { fetchPeople, deletePerson } from "../api-requests";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import DeleteConfirmation from "../components/DeleteConfirmation";
 
 function ListPeoplePage() {
   const dispatch = useDispatch();
   const people = useSelector((state) => state.people);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [personToDelete, setPersonToDelete] = useState("");
+  const [snackbarBackgroundColor, setSnackbarBackgroundColor] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,13 +43,39 @@ function ListPeoplePage() {
     fetchData();
   }, [dispatch]);
 
-  const handleDeleteButtonClick = () => {
-    console.log("Delete button pressed.");
-    //TODO: add functionality
+  const handleDeleteButtonClick = (id) => {
+    setPersonToDelete(id);
+    setDialogOpen(true);
   };
 
   const handleViewDetailsButtonClick = (id) => {
     navigate(`/people/${id}`);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    setDialogOpen(false);
+    try {
+      await deletePerson(personToDelete);
+      dispatch(removePerson(personToDelete));
+      setSnackbarMessage("Person deleted successfully");
+      setSnackbarBackgroundColor("green");
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage("Failed to delete person");
+      setSnackbarBackgroundColor("red");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   return (
@@ -94,6 +133,29 @@ function ListPeoplePage() {
               </Grid>
             ))}
       </Grid>
+      {isLoading ? null : (
+        <DeleteConfirmation
+          open={dialogOpen}
+          onClose={handleCloseDialog}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+      {isLoading ? null : (
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={snackbarOpen}
+          autoHideDuration={2000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="error"
+            sx={{ backgroundColor: snackbarBackgroundColor }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </div>
   );
 }

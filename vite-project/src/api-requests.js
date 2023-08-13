@@ -69,3 +69,29 @@ export async function fetchPerson(id) {
     throw new Error("Request Failed");
   }
 }
+
+export async function deletePerson(id) {
+  try {
+    const storedToken =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const response = await fetch(
+      `https://umbrage-interview-api.herokuapp.com/people/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Request Failed");
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    throw new Error("Request Failed");
+  }
+}

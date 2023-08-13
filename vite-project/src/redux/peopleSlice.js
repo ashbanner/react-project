@@ -7,9 +7,13 @@ const peopleSlice = createSlice({
     setPeople: (state, action) => {
       return action.payload;
     },
+    removePerson: (state, action) => {
+      const personId = action.payload;
+      return state.filter((person) => person.id !== personId);
+    },
   },
 });
 
-export const { setPeople } = peopleSlice.actions;
+export const { setPeople, removePerson } = peopleSlice.actions;
 
 export default peopleSlice.reducer;
