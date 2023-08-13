@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import ListPeoplePage from "./pages/ListPeoplePage";
+import DetailedViewPage from "./pages/DetailedViewPage";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<ListPeoplePage />} />
+        <Route path="/people/:id" element={<DetailedViewPage />} />
       </Routes>
     </BrowserRouter>
   );

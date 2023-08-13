@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Avatar from "./Avatar";
 
 function AppCard({
+  id,
   firstName,
   lastName,
   imageUrl,
@@ -15,7 +16,7 @@ function AppCard({
   };
 
   const handleViewDetailsClick = () => {
-    onViewDetailsButtonClick();
+    onViewDetailsButtonClick(id);
   };
 
   return (
