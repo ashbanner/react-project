@@ -31,3 +31,62 @@ Adding a token to session storage will cause the token to be wiped whenever the 
 ## Material UI Skeleton
 
 Material UI Skeleton is being used as a placeholder to show the user a visual indication that data is being loaded.
+
+## DAML Templates
+
+I wanted to take the opportunity to share some insights I've gained about DAML. If I were to construct a similar application using DAML, the following templates would likely be part of my implementation.
+
+For some of these I will use an id field. I am doing this in instances where there is not a key that can be formed without the risk of duplicates. The id would be a uuid.
+
+```
+template Person
+    with
+        owner: Party
+        observers: [Party]
+        id: Text
+        firstName: Text
+        lastName: Text
+        email: Text
+        jobTitle: Text
+        avatarLink: Optional Text
+    where
+        signatory owner
+        observer observers
+        key (owner, id) : (Party, Text)
+        maintainer key._1
+        choice UpdatePerson: ContractId Person
+            with
+                updatedFirstName: Text
+                updatedLastName: Text
+                updatedEmail: Text
+                updatedJobTitle: Text
+                updatedAvatarLink: Text
+            controller owner
+            do
+                create this with
+                    firstName = updatedFirstName
+                    lastName = updatedLastName
+                    email = updatedEmail
+                    jobTitle = updatedJobTitle
+                    avatarLink = updatedAvatarLink
+        choice ArchivePerson: ()
+            controller owner
+            do pure()
+
+template Comment
+    with
+        owner: Party
+        observers: [Party]
+        personId: Text
+        message: Text
+        date: Time
+    where
+        signatory owner
+        observer observers
+        key (owner,date, personId ) : (Party, Time, Text)
+        maintainer key._1
+
+        choice ArchiveComment : ()
+            controller owner
+            do pure()
+```
