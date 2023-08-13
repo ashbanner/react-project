@@ -17,3 +17,29 @@ export async function login(username, password) {
   const data = await response.json();
   return data.access_token;
 }
+
+export async function fetchPeople() {
+  try {
+    const storedToken =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const response = await fetch(
+      "https://umbrage-interview-api.herokuapp.com/people",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Request Failed");
+    }
+
+    const responseData = await response.json();
+    return responseData.people;
+  } catch (error) {
+    throw new Error("Request Failed");
+  }
+}

@@ -21,3 +21,7 @@ Saving the token to local storage will cause it to procist between user sessions
 ### Uses for session storage:
 
 Adding a token to session storage will cause the token to be wiped whenever the user's session ends, which will cause the user to need to re-authenticate to use the application.
+
+## Material UI Skeleton
+
+Material UI Skeleton is being used as a placeholder to show the user a visual indication that data is being loaded.
