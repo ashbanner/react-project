@@ -1,5 +1,11 @@
 # react-project
 
+## Build and Run Instructions
+
+1. Cd into vite-project
+2. In terminal, `npm run i` to install dependencies
+3. In terminal, `npm run dev` to start application on localhost
+
 ## Material UI
 
 This package was used to leverage the pre-built componenets and Material UI's grid 2.0, so that focus could be placed on building functionality instead of styling. Material UI's grid 2.0 is used to add responsiveness to varying screen sizes.
