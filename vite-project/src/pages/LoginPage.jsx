@@ -10,6 +10,7 @@ import {
   Alert,
 } from "@mui/material";
 import { login } from "../api-requests";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -18,6 +19,8 @@ function LoginPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const isFormValid = username.trim() !== "" && password.trim() !== "";
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -28,7 +31,7 @@ function LoginPage() {
         } else {
           sessionStorage.setItem("token", token);
         }
-        // TODO: redirect upon success
+        navigate("/");
       } else {
         setSnackbarOpen(true);
       }
