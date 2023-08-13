@@ -5,12 +5,15 @@ import { Grid, Typography, Skeleton, Stack } from "@mui/material";
 import AppCard from "../components/AppCard";
 import { fetchPeople } from "../api-requests";
 import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
 
 function ListPeoplePage() {
   const dispatch = useDispatch();
   const people = useSelector((state) => state.people);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +35,8 @@ function ListPeoplePage() {
     //TODO: add functionality
   };
 
-  const handleViewDetailsButtonClick = () => {
-    console.log("View details button pressed.");
-    //TODO: add functionality
+  const handleViewDetailsButtonClick = (id) => {
+    navigate(`/people/${id}`);
   };
 
   return (
@@ -82,6 +84,7 @@ function ListPeoplePage() {
           : people.map((person) => (
               <Grid item xs={12} sm={6} md={4} key={person.id}>
                 <AppCard
+                  id={person.id}
                   firstName={person.first_name}
                   lastName={person.last_name}
                   imageUrl={person.avatar}
