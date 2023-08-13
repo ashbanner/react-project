@@ -12,7 +12,7 @@ function AppCard({
   onViewDetailsButtonClick,
 }) {
   const handleDeleteClick = () => {
-    onDeleteButtonClick();
+    onDeleteButtonClick(id);
   };
 
   const handleViewDetailsClick = () => {
