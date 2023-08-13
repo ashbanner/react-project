@@ -24,6 +24,8 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
       const token = await login(username, password);
       if (token) {
         if (rememberMe) {
