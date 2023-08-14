@@ -32,6 +32,10 @@ Adding a token to session storage will cause the token to be wiped whenever the 
 
 Material UI Skeleton is being used as a placeholder to show the user a visual indication that data is being loaded.
 
+## Note on the Create API Endpoint
+
+The create person api endpoint returns a person that does not match the data submitted in the request body.
+
 ## DAML Templates
 
 I wanted to take the opportunity to share some insights I've gained about DAML. If I were to construct a similar application using DAML, the following templates would likely be part of my implementation.
