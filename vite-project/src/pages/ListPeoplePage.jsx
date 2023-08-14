@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPeople, removePerson } from "../redux/peopleSlice";
+import { setPeople, removePerson, addPerson } from "../redux/peopleSlice";
 import {
   Grid,
   Typography,
@@ -10,10 +10,11 @@ import {
   Alert,
 } from "@mui/material";
 import AppCard from "../components/AppCard";
-import { fetchPeople, deletePerson } from "../api-requests";
+import { fetchPeople, deletePerson, createPerson } from "../api-requests";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmation from "../components/DeleteConfirmation";
+import CreatePersonDialog from "../components/CreateModal";
 
 function ListPeoplePage() {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function ListPeoplePage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [personToDelete, setPersonToDelete] = useState("");
@@ -78,9 +80,39 @@ function ListPeoplePage() {
     setSnackbarOpen(false);
   };
 
+  const handleDialogOpen = () => {
+    setCreateDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setCreateDialogOpen(false);
+  };
+
+  const handleCreatePerson = async (formData) => {
+    const data = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      job_title: formData.jobRole,
+      avatar: formData.avatarUrl,
+    };
+    handleDialogClose();
+    try {
+      const person = await createPerson(data);
+      dispatch(addPerson(person));
+      setSnackbarMessage("Person created successfully");
+      setSnackbarBackgroundColor("green");
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage("Failed to create person");
+      setSnackbarBackgroundColor("red");
+      setSnackbarOpen(true);
+    }
+  };
+
   return (
     <div>
-      <NavBar />
+      <NavBar onCreatePressed={handleDialogOpen} />
       <Typography
         variant="h3"
         style={{
@@ -138,6 +170,13 @@ function ListPeoplePage() {
           open={dialogOpen}
           onClose={handleCloseDialog}
           onConfirm={handleConfirmDelete}
+        />
+      )}
+      {isLoading ? null : (
+        <CreatePersonDialog
+          open={createDialogOpen}
+          onClose={handleDialogClose}
+          onSubmit={handleCreatePerson}
         />
       )}
       {isLoading ? null : (

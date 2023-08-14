@@ -95,3 +95,30 @@ export async function deletePerson(id) {
     throw new Error("Request Failed");
   }
 }
+
+export async function createPerson(data) {
+  try {
+    const storedToken =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const response = await fetch(
+      `https://umbrage-interview-api.herokuapp.com/people`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Request Failed");
+    }
+
+    const responseData = await response.json();
+    return responseData.person;
+  } catch (error) {
+    throw new Error("Request Failed");
+  }
+}
